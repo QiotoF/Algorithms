@@ -1,0 +1,62 @@
+package sorting.merge_sort;
+
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
+public class FasterMerge {
+    private static Comparable[] aux;
+
+    public static void sort(Comparable[] a) {
+        int n = a.length;
+        aux = new Comparable[n];
+        sort(a, 0, n - 1);
+    }
+
+    private static void sort(Comparable[] a, int lo, int hi) {
+        if (lo >= hi) return;
+        int mid = lo + (hi - lo) / 2;
+        sort(a, lo, mid);
+        sort(a, mid + 1, hi);
+        merge(a, lo, mid, hi);
+    }
+
+    private static void merge(Comparable[] a, int lo, int mid, int hi) {
+        int i = lo;
+        int j = hi;
+
+        for (int k = lo; k <= mid; k++) {
+            aux[k] = a[k];
+        }
+        for (int k = mid + 1; k <= hi; k++) {
+            aux[hi + mid + 1 - k] = a[k];
+        }
+
+        for (int k = lo; k <= hi; k++) {
+            if (less(aux[j], aux[i])) a[k] = aux[j--];
+            else a[k] = aux[i++];
+        }
+    }
+
+    private static boolean less(Comparable a, Comparable b) {
+        return a.compareTo(b) < 0;
+    }
+
+    private static void show(Comparable[] a) {
+        for (Comparable c : a)
+            StdOut.print(c + " ");
+        StdOut.println();
+    }
+
+    private static boolean isSorted(Comparable[] a) {
+        for (int i = 1; i < a.length; i++)
+            if (less(a[i], a[i - 1])) return false;
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String[] a = StdIn.readAllStrings();
+        sort(a);
+        assert isSorted(a);
+        show(a);
+    }
+}
