@@ -106,20 +106,6 @@ public class NonrecursiveBST<Key extends Comparable, Value> {
         return ceiling;
     }
 
-    public int rank(Key key) {
-        Node x = root;
-        int rank = 0;
-        while (x != null) {
-            int cmp = key.compareTo(x.key);
-            if (cmp < 0) x = x.left;
-            else if (cmp > 0) {
-                rank += size(x.left) + 1;
-                x = x.right;
-            } else rank += size(x.left);
-        }
-        return rank;
-    }
-
     public static void main(String[] args) {
         NonrecursiveBST<String, Integer> st = new NonrecursiveBST<>();
 

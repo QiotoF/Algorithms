@@ -1,7 +1,7 @@
 package searching.binary_search_trees;
 
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Draw;
+import edu.princeton.cs.algs4.StdRandom;
 import fundamentals.bags_queues_stacks.Queue;
 
 import java.util.NoSuchElementException;
@@ -259,15 +259,62 @@ public class BST<Key extends Comparable<Key>, Value> {
         return internalPathLength + 1;
     }
 
-    public static void main(String[] args) {
-        BST<String, Integer> st = new BST<>();
+    Draw draw;
 
-        StdOut.println(BST.optCompares(StdIn.readInt()));
+    public void draw(boolean printKeys, boolean dots) {
+        draw = new Draw();
+        double width = 1920. / 2;
+        double height = 1024;
+        draw.setCanvasSize((int) width, (int) height);
+        draw.setPenRadius(0.006);
+        draw.setXscale(0, width);
+        draw.setYscale(0, height);
+        double x = width / 2;
+        double y = height - 150.;
+        double link_width = width / 4;
+        double link_height = 50;
+        double circle_radius;
+        if (dots) {
+            circle_radius = 1;
+            link_height = 20;
+        } else circle_radius = 15;
+        draw(root, x, y, link_height, link_width, circle_radius, printKeys);
+    }
+
+    private void draw(Node a, double x, double y, double link_height, double link_width, double circle_radius, boolean printKeys) {
+        if (a == null) return;
+
+        draw.circle(x, y, circle_radius);
+        if (printKeys) draw.text(x, y, a.key.toString());
+        double hypotenuse = Math.sqrt(Math.pow(link_height, 2) + Math.pow(link_width, 2));
+        if (a.left != null) {
+            draw.line(x - circle_radius * (link_width / hypotenuse), y - circle_radius * (link_height / hypotenuse),
+                    x - link_width + circle_radius * (link_width / hypotenuse), y - link_height + circle_radius * (link_height / hypotenuse));
+        }
+        if (a.right != null) {
+            draw.line(x + circle_radius * (link_width / hypotenuse), y - circle_radius * (link_height / hypotenuse),
+                    x + link_width - circle_radius * (link_width / hypotenuse), y - link_height + circle_radius * (link_height / hypotenuse));
+        }
+        draw(a.left, x - link_width, y - link_height, link_height, link_width / 2, circle_radius, printKeys);
+        draw(a.right, x + link_width, y - link_height, link_height, link_width / 2, circle_radius, printKeys);
+    }
+
+    public static void main(String[] args) {
+        BST<Double, Integer> st = new BST<>();
+
+//        StdOut.println(BST.optCompares(StdIn.readInt()));
 
 //        for (int i = 0; !StdIn.isEmpty(); i++) {
 //            st.put(StdIn.readString(), i);
 //        }
-//
+
+        int N = 100;
+        for (int i = 0; i < N; i++) {
+            st.put(StdRandom.uniform(), i);
+        }
+
+        st.draw(false, false);
+
 //        StdOut.println(st.avgCompares());
 
 //        while (!StdIn.isEmpty()) {
